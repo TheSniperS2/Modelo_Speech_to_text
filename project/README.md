@@ -1,69 +1,97 @@
 # Audio Recognition Project
 
-This project is designed for a simple audio recognition system that distinguishes between two classes: "Sí" and "No". It utilizes various Python libraries for audio processing, model training, and inference.
+Este proyecto implementa un sistema simple de reconocimiento de audio para distinguir entre las palabras "Sí" y "No" usando Python, PyTorch y FastAPI.
 
-## Project Structure
+## Estructura del Proyecto
 
 ```
 project
 ├── data
-│   ├── si          # Directory for audio files recorded for the "Sí" class
-│   └── no          # Directory for audio files recorded for the "No" class
+│   ├── si          # Directorio para archivos de audio grabados para la clase "Sí"
+│   └── no          # Directorio para archivos de audio grabados para la clase "No"
 ├── model
-│   └── model.pt    # Trained model for voice recognition
-├── record.py       # Script to record audio and save it based on user input
-├── train.py        # Script to train the voice recognition model
-├── inference.py     # Script for model inference on new audio inputs
-├── requirements.txt # List of dependencies required for the project
-└── README.md       # Documentation for the project
+│   └── model.pt    # Modelo entrenado para el reconocimiento de voz
+├── record.py       # Interfaz gráfica para grabar audio y probar el modelo
+├── train.py        # Script para entrenar el modelo de reconocimiento de voz
+├── inference.py    # API FastAPI para la inferencia del modelo en nuevas entradas de audio
+├── requirements.txt # Lista de dependencias requeridas para el proyecto
+└── README.md       # Documentación del proyecto
 ```
 
-## Installation
+## Instalación
 
-To set up the project, clone the repository and install the required dependencies:
+1. Clona el repositorio y entra a la carpeta `project`:
+   ```bash
+   git clone <repository-url>
+   cd project
+   ```
+
+2. Instala las dependencias requeridas:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+## Uso
+
+### 1. Grabar audios de entrenamiento
+
+Ejecuta la interfaz gráfica para grabar audios de "sí" y "no":
 
 ```bash
-git clone <repository-url>
-cd project
-pip install -r requirements.txt
+python record.py
 ```
 
-## Usage
+- Usa el botón **"Grabar 'Sí' (entrenar)"** para guardar audios en `data/si/`.
+- Usa el botón **"Grabar 'No' (entrenar)"** para guardar audios en `data/no/`.
+- Graba al menos 5-10 ejemplos por clase para mejores resultados.
 
-1. **Recording Audio**: Run `record.py` to start recording audio. Click the "Sí" button to save audio in the `data/si` directory or the "No" button to save audio in the `data/no` directory.
+### 2. Entrenar el modelo
+
+Desde la terminal, ejecuta:
+
+```bash
+python train.py
+```
+
+Esto entrenará el modelo con los audios guardados y generará el archivo `model/model.pt`.  
+Puedes ajustar la cantidad de épocas de entrenamiento modificando el parámetro `num_epochs` en `train.py`.
+
+### 3. Probar el modelo (inferir)
+
+1. Inicia el servidor FastAPI:
    ```bash
-   python record.py
+   python -m uvicorn inference:app --reload
    ```
 
-2. **Training the Model**: After collecting audio samples, run `train.py` to train the voice recognition model using the recorded audio.
-   ```bash
-   python train.py
-   ```
+2. En la interfaz gráfica (`record.py`), usa el botón **"Grabar y predecir"** para grabar un audio y ver la predicción del modelo ("si" o "no").
 
-3. **Model Inference**: Use `inference.py` to load the trained model and predict whether a new audio input corresponds to "Sí" or "No".
-   ```bash
-   python inference.py
-   ```
+## Dependencias
 
-## Dependencies
+El proyecto requiere los siguientes paquetes de Python (ver `requirements.txt`):
 
-The project requires the following Python packages:
-
-- PyTorch
+- torch
 - torchaudio
-- sounddevice or pyaudio
-- FastAPI (optional)
-- tkinter (optional)
+- sounddevice
+- fastapi
+- python-multipart
+- requests
 - numpy
 - scipy
-- librosa (optional)
-- matplotlib (optional)
+- matplotlib
 - scikit-learn
+- (tkinter viene incluido en Python estándar para Windows)
 
-## Contributing
+## Notas
 
-Contributions are welcome! Please submit a pull request or open an issue for any enhancements or bug fixes.
+- Todos los scripts deben ejecutarse desde la carpeta `project`.
+- Los audios de entrenamiento deben estar en las carpetas `data/si/` y `data/no/`.
+- Puedes agregar más clases (por ejemplo, "unknown") si lo deseas, ajustando el código.
+- Si quieres entrenar más épocas, cambia el valor de `num_epochs` en la llamada a `train_model` en `train.py`.
 
-## License
+## Contribuyendo
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+¡Las contribuciones son bienvenidas! Por favor, envía una solicitud de extracción o abre un issue para cualquier mejora o corrección de errores.
+
+## Licencia
+
+Este proyecto está bajo la Licencia MIT. Consulta el archivo LICENSE para más detalles.
